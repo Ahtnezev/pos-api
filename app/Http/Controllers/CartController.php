@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CartRequest;
 use App\Models\Cart;
-use App\Models\CartDetails;
+use App\Models\CartDetail;
 use App\Models\Product;
-use Illuminate\Http\Client\Response;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -90,7 +88,7 @@ class CartController extends Controller
      * Almacena un nuevo detalle de carrito
     */
     private function storeNewCartDetail(Request $request, int $cardId): void {
-        CartDetails::create([
+        CartDetail::create([
             'cart_id' => $cardId,
             'client_id' => Auth::id(),
             'product_id' => $request->product_id,
@@ -111,7 +109,7 @@ class CartController extends Controller
 
         Cart::where('client_id', Auth::id())
             ->update(['pending' => false]);
-        CartDetails::where('client_id', Auth::id())
+        CartDetail::where('client_id', Auth::id())
             ->update(['purchase_completed' => true]);
 
         return response()->json(['message' => 'Checkout completed', 'items' => $cart]);
@@ -163,7 +161,7 @@ class CartController extends Controller
     */
     public function destroyDetail(string $cartDetailId)
     {
-        $cart_detail = CartDetails::find($cartDetailId);
+        $cart_detail = CartDetail::find($cartDetailId);
         if (!$cart_detail)
             return response()->json(['message' => 'Whoops!, cart item not found'], 404);
 

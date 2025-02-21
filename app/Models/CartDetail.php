@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class CartDetails extends Model
+class CartDetail extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -22,7 +22,7 @@ class CartDetails extends Model
 
 
     /**
-     * Get the cart that owns the CartDetails
+     * Get the cart that owns the CartDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
