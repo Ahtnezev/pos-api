@@ -23,5 +23,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('stores.products', ProductController::class)->shallow();
     Route::post('cart', [CartController::class, 'store']);
     Route::post('cart/checkout', [CartController::class, 'checkout']);
+    Route::delete('cart/detail/{cartDetailId}/', [CartController::class, 'destroyDetail']);
 
 });

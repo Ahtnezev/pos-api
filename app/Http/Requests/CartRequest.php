@@ -23,13 +23,14 @@ class CartRequest extends FormRequest
     {
         return [
             'product_id' => 'required',
-            'quantity' => 'required|integer'
+            'quantity' => 'required|integer|min:1'
         ];
     }
 
     public function messages()
     {
         return [
+            '*.min' => 'The :attribute field must be at least :min',
             '*.required' => 'The :attribute field is required',
             '*.integer' => 'The :attribute field must be an integer'
         ];

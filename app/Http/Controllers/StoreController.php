@@ -54,7 +54,7 @@ class StoreController extends Controller
     {
         $store = Store::find($storeId);
         if (!$store)
-            return response()->json(['message' => 'Store not found'], 404);
+            return response()->json(['message' => 'Whoops!, store not found'], 404);
 
         // $this->authorize('delete', $store);
         $store->delete();

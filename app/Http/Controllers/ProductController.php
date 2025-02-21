@@ -35,7 +35,7 @@ class ProductController extends Controller
         $product = Product::find($id);
 
         return !$product
-            ? response()->json(['message' => 'Product not found'], 404)
+            ? response()->json(['message' => 'Whoops!, product not found'], 404)
             : $product;
     }
 
@@ -57,7 +57,7 @@ class ProductController extends Controller
         $product = Product::find($productId);
 
         if (!$product)
-            return response()->json(['message' => 'Product not found'], 404);
+            return response()->json(['message' => 'Whoops!, product not found'], 404);
 
         $product->delete();
 
