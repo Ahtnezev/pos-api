@@ -51,4 +51,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get all of the stores for the User
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function stores()
+    {
+        return $this->hasMany(Store::class, 'vendor_id');
+    }
 }
