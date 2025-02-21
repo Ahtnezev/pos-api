@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserTypes;
 use App\Http\Requests\CartRequest;
 use App\Models\Cart;
 use App\Models\CartDetail;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -124,6 +126,29 @@ class CartController extends Controller
             ->update(['purchase_completed' => true]);
 
         return response()->json(['message' => 'Checkout completed', 'items' => $cart]);
+    }
+
+
+    /**
+     * Muestra el historial de compras del cliente
+    */
+    public function clientPurchaseHistory(string $clientId)
+    {
+        $client = $this->searchUser($clientId);
+
+        if (!$client)
+            return response()->json(['message' => 'Whoops!, client not found'], 404);
+
+        $cart = Cart::with('details')->where("client_id", $client->id)
+            ->where('pending', false)
+                ->get();
+
+        return $cart;
+    }
+
+    // Busca al cliente
+    private function searchUser(string $clientId) : ?User {
+        return User::where('role', UserTypes::Client)->find($clientId);
     }
 
     /**
