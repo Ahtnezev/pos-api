@@ -37,4 +37,14 @@ class Cart extends Model
         return $this->belongsTo(User::class, 'client_id');
     }
 
+    /**
+     * Get the client that owns the Cart
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
 }

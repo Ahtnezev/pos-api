@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRequest;
+use App\Models\CartDetail;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,6 +26,29 @@ class StoreController extends Controller
         $validatedData = $request->validated();
 
         return Store::create(['name' => $validatedData['name'], 'vendor_id' => Auth::id()]);
+    }
+
+    /**
+     * Display a listing of the resource.
+    */
+    public function salesHistory(string $storeId)
+    {
+        $vendor = Auth::user();
+
+        // verificamos que el vendedor tenga la tienda
+        $store = Store::where('id', $storeId)->where('vendor_id', $vendor->id)->firstOrFail();
+
+        $sales = CartDetail::whereHas('cart', function ($query) {
+                $query->where('pending', false);
+            })
+            ->whereHas('product', function ($query) use ($storeId) {
+                $query->where('store_id', $storeId);
+            })
+            ->with(['cart.user', 'product'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return response()->json($sales);
     }
 
     /**
