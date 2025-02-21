@@ -101,16 +101,18 @@ class CartController extends Controller
     }
 
     /**
-     * Una vez se confirme la acción realizar checkout
+     * Una vez confirmada la acción de compra, realizamos checkout
     */
     public function checkout()
     {
-        $cart = Cart::where('client_id', Auth::id())
+        $cart = Cart::with('details')->where('client_id', Auth::id())
             ->where('pending', true)
                 ->get();
 
         Cart::where('client_id', Auth::id())
             ->update(['pending' => false]);
+        CartDetails::where('client_id', Auth::id())
+            ->update(['purchase_completed' => true]);
 
         return response()->json(['message' => 'Checkout completed', 'items' => $cart]);
     }
