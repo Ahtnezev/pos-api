@@ -19,6 +19,7 @@ class CartController extends Controller
         //
     }
 
+    // Verifica si el producto tiene stock
     private function hasStockProduct(Request $request): int {
         $error_type = 0;
         $product = Product::findOrFail($request->product_id);
@@ -88,14 +89,21 @@ class CartController extends Controller
      * Almacena un nuevo detalle de carrito
     */
     private function storeNewCartDetail(Request $request, int $cardId): void {
+        $product = $this->searchProduct($request->product_id);
+
         CartDetail::create([
             'cart_id' => $cardId,
             'client_id' => Auth::id(),
             'product_id' => $request->product_id,
             'quantity' => $request->quantity,
+            'price' => $product->price,
         ]);
 
         $this->updateProductStock($request);
+    }
+
+    private function searchProduct(string $productId) : ?Product {
+        return Product::find($productId);
     }
 
     /**
@@ -106,6 +114,9 @@ class CartController extends Controller
         $cart = Cart::with('details')->where('client_id', Auth::id())
             ->where('pending', true)
                 ->get();
+
+        if ($cart->isEmpty())
+            return response()->json(['message' => 'Whoops!, cart not found'], 404);
 
         Cart::where('client_id', Auth::id())
             ->update(['pending' => false]);
